@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Long polling example</title>
+  </head>
+  <body>
+    <h1>Long polling example</h1>
+    <div id="data-container"></div>
+    <script>
+        // Function to fetch data from server using Promises
+        function getdata(lastdata = "") {
+          fetch(`/getdata?lastdata=${lastdata}`)
+            .then((response) => response.json())
+            .then((result) => {
+              // Update DOM with latest data
+              document.getElementById("data-container").innerHTML = result.data;
+      
+              // Immediately poll again with latest data (long polling loop)
+              getdata(result.data);
+            })
+            .catch((error) => {
+              console.error("Polling error:", error);
+              // Retry after a short delay if error occurs
+              setTimeout(() => getdata(lastdata), 3000);
+            });
+        }
+      
+        // Start long polling
+        getdata();
+      </script>
+      
+  </body>
+</html>

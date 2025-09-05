@@ -1,0 +1,41 @@
+syntax = "proto3"; // Specify we are using Protocol Buffers v3 syntax
+
+// Service definition: groups together RPC (Remote Procedure Call) methods
+
+service CustomerService {
+    // Returns all customers (no input, just an Empty message)
+    rpc GetAll (Empty) returns (CustomerList) {}
+
+    // Returns a single customer by ID
+    rpc Get (CustomerRequestId) returns (Customer) {}
+
+    // Inserts a new customer and returns the created customer
+    rpc Insert (Customer) returns (Customer) {}
+
+    // Updates an existing customer and returns the updated customer
+    rpc Update (Customer) returns (Customer) {}
+
+    // Removes a customer by ID (returns Empty as confirmation)
+    rpc Remove (CustomerRequestId) returns (Empty) {}
+}
+
+// An empty message (used when no input/output data is required)
+message Empty {}
+
+// Request message for operations that require a customer ID
+message CustomerRequestId {
+    string id = 1; // Unique identifier for a customer
+}
+
+// A list of customers (used in GetAll)
+message CustomerList {
+   repeated Customer customers = 1; // repeated = array/list of Customer objects
+}
+
+// A single customer record
+message Customer {
+    string id = 1;       // Unique identifier for the customer
+    string name = 2;     // Customer’s name
+    int32 age = 3;       // Customer’s age (int32 is the default integer type)
+    string address = 4;  // Customer’s address
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short polling example</title>
+</head>
+<body>
+    <h1>Short polling example</h1>
+    <div id="data-container"></div>
+    <script>
+        // Function to fetch data from server using Promises
+        function getdata() {
+            fetch('/getdata')
+                .then((response) => response.json())
+                .then((result) => {
+                    // Update DOM with fetched data
+                    document.getElementById('data-container').innerHTML = result.data;
+                })
+                .catch((error) => {
+                    // Log error if request fails
+                    console.log(error);
+                });
+        }
+    
+        // Store interval id globally so we can stop it later
+        let intervalId;
+    
+        // Start short polling (fetch every 5 seconds)
+        function shortPolling() {
+            intervalId = setInterval(() => {
+                try {
+                    getdata(); // Always wrap polling call in try/catch (safe practice)
+                } catch (error) {
+                    console.error("Polling error:", error);
+                }
+            }, 5000);
+        }
+    
+        // Start polling as soon as script runs
+        shortPolling();
+    
+        // 🛑 IMPORTANT:
+        // You should only clear interval when:
+        // - User navigates away
+        // - User logs out
+        // - Target condition is met
+        //
+        // Example: stop polling on page unload
+        window.addEventListener("beforeunload", () => {
+            clearInterval(intervalId);
+        });
+    
+        // OR stop after some custom user action:
+        // document.getElementById("stopBtn").addEventListener("click", () => {
+        //     clearInterval(intervalId);
+        // });
+    </script>
+    
+</body>
+</html>
